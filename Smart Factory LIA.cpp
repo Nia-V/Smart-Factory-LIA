@@ -80,36 +80,6 @@ void waitFlowCondition(float targetLiters) {
 }
 
 
-void setup() {
-//Monitor init
-  Serial.begin(9600); 
-//pin init
-  pinMode(BORAX_FWD_PIN, OUTPUT);
-  pinMode(BORAX_REV_PIN, OUTPUT);
-  pinMode(HEATER_PIN, OUTPUT);
-  pinMode(MIXER_PIN, OUTPUT);
-  pinMode(GLUE_PIN, OUTPUT);
-  pinMode(SLIME_PIN, OUTPUT);
-  pinMode(PUMP_PWM_PIN, OUTPUT);
-  pinMode(FLOW_SENSOR, INPUT_PULLUP);
-  pinMode(TORQ_ADC_PIN, INPUT_PULLUP);
-  pinMode(RESET_PIN, INPUT_PULLUP);
-// bring all pins high (because of relay wiring, this actaully means off)
-  digitalWrite(BORAX_FWD_PIN, 1);
-  digitalWrite(BORAX_REV_PIN, 1);
-  digitalWrite(HEATER_PIN, 1);
-  digitalWrite(MIXER_PIN, 1);
-  digitalWrite(GLUE_PIN, 1);
-  digitalWrite(SLIME_PIN, 1);
-  
-//Make sure water pump pin is set to zero at start
-  analogWrite(PUMP_PWM_PIN, 0);
-  
-  //init  for pulse count interrupt functions (peed encoder and flow sensor)
-  attachInterrupt(digitalPinToInterrupt(FLOW_SENSOR), onPulse, RISING);
-
-  attachInterrupt(digitalPinToInterrupt(TORQ_ADC_PIN), handlePulse, RISING);
-}
 //Blocking temp condition function (lol why would I ever create a private variable, thats for losers, and me I'm bad at programming (⌐■_■))
 void waitTempCondition(int threshold) {
   Serial.println(analogRead(TEMP_ADC_PIN));
@@ -243,6 +213,39 @@ void Borax(int doses) {
     delay(800);
   }
 }
+
+void setup() {
+//Monitor init
+  Serial.begin(9600); 
+//pin init
+  pinMode(BORAX_FWD_PIN, OUTPUT);
+  pinMode(BORAX_REV_PIN, OUTPUT);
+  pinMode(HEATER_PIN, OUTPUT);
+  pinMode(MIXER_PIN, OUTPUT);
+  pinMode(GLUE_PIN, OUTPUT);
+  pinMode(SLIME_PIN, OUTPUT);
+  pinMode(PUMP_PWM_PIN, OUTPUT);
+  pinMode(FLOW_SENSOR, INPUT_PULLUP);
+  pinMode(TORQ_ADC_PIN, INPUT_PULLUP);
+  pinMode(RESET_PIN, INPUT_PULLUP);
+// bring all pins high (because of relay wiring, this actaully means off)
+  digitalWrite(BORAX_FWD_PIN, 1);
+  digitalWrite(BORAX_REV_PIN, 1);
+  digitalWrite(HEATER_PIN, 1);
+  digitalWrite(MIXER_PIN, 1);
+  digitalWrite(GLUE_PIN, 1);
+  digitalWrite(SLIME_PIN, 1);
+  
+//Make sure water pump pin is set to zero at start
+  analogWrite(PUMP_PWM_PIN, 0);
+  
+  //init  for pulse count interrupt functions (peed encoder and flow sensor)
+  attachInterrupt(digitalPinToInterrupt(FLOW_SENSOR), onPulse, RISING);
+
+  attachInterrupt(digitalPinToInterrupt(TORQ_ADC_PIN), handlePulse, RISING);
+}
+
+
 void loop() {
   float setpointTorque = 5.0;        
   float measuredTorque = readRPM();  
